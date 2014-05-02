@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  allow_netting: false
+  collection_mail_frecuency_in_days: 1
+
+two:
+  user_id: 1
+  allow_netting: false
+  collection_mail_frecuency_in_days: 1

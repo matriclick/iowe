@@ -1,0 +1,35 @@
+<% content_for :content do %>
+	<table width="95%" cellpadding="10">
+		<tr>
+			<td align="left">
+				<font face="Lucida Grande, Segoe UI, Arial, Verdana, Lucida Sans Unicode, Tahoma, Sans Serif">
+					Hola!<br/><br/>
+					Un amigo ha ingresado una deuda que él tiene contigo!<br/><br/>
+					Automágicamente se ha creado una cuenta con tu correo <%= @transaction.debtor.email %><br/><br/>
+					Tu clave es <b>111111</b><br/><br/>
+					<h3>El detalle de la deuda ingresada es el siguiente:</h3>
+					<dl class="dl-horizontal">
+					  <dt><strong><%= t 'created_at' %>:</strong></dt>
+					  <dd><%=l @transaction.created_at %></dd>
+					  <dt><strong><%= t 'debtor' %>:</strong></dt>
+					  <dd><%= @transaction.debtor.email %></dd>
+					  <dt><strong><%= t 'lender' %>:</strong></dt>
+					  <dd><%= @transaction.lender.email %></dd>
+					  <dt><strong><%= t 'amount' %>:</strong></dt>
+					  <dd><%= number_to_currency @transaction.amount, precision: 0 %> <%= @transaction.currency.symbol unless @transaction.currency.nil? %></dd>
+					  <dt><strong><%= t 'comments' %>:</strong></dt>
+					  <dd><%= @transaction.comments %></dd>
+					</dl>
+					<div style="text-align:center; margin-top:30px">
+						Ingresa con tu correo y clave para tener todos los préstamos que haces y deudas que tienes organizadas de forma simple.
+					</div>
+					<div style="text-align:center; margin-top:30px">
+						¡No pierdas un peso más!
+					</div>
+				</font>
+			</td>
+		</tr>
+	</table>
+<% end %>
+
+<%= render "layouts/email_template" %>

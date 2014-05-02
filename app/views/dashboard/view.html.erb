@@ -1,0 +1,122 @@
+<h1>Dashboard</h1>
+<%= link_to 'Agregar Deuda', new_transaction_path, class: 'btn btn-danger' %>
+<div class="row" style="margin-top:20px">
+	<div class="span12">
+		Te deben: <%= number_to_currency current_user.get_active_loans.sum(:amount), precision: 0 %> | 
+		Debes: <%= number_to_currency current_user.get_active_debts.sum(:amount), precision: 0 %> | 
+		Deuda consolidada: <%= number_to_currency current_user.net_transactions, precision: 0 %> (si es negativo es que debes $; si es positivo te deben)
+	</div>
+</div>
+<hr>
+<h2>Deudas y préstamos activos</h2>
+<div class=" table-responsive">
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Monto Acumulado</th><th>Fecha Creación</th><th>Monto</th><th>Prestador</th><th>Deudor</th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% net_transactions = 0 %>
+		<% @debts_and_loans.each do |transaction| %>	
+		<% is_debt = transaction.user_is_debtor?(current_user) %>
+		<tr <%= is_debt ? 'style=background-color:#FFEEEE' : 'style=background-color:#EEFFF2' %>>
+			<% net_transactions = is_debt ? net_transactions - transaction.amount : net_transactions + transaction.amount %>
+			<td><%= number_to_currency net_transactions, precision: 0 %></td>
+			<td><%= transaction.created_at.localtime.localtime.strftime('%d/%m/%Y %H:%M:%S') %></td>
+			<td><%= number_to_currency transaction.amount, precision: 0 %> <%= transaction.currency.symbol unless transaction.currency.nil? %></td>
+			<td><%= transaction.lender.email unless transaction.lender.nil? %></td>
+			<td><%= transaction.debtor.email unless transaction.debtor.nil? %></td>
+			<% if is_debt and !transaction.settled_debtor %>
+				<td><%= link_to('Pagar Deuda', transaction_path(transaction), class: 'btn btn-default btn-mini') %></td>
+			<% elsif is_debt and transaction.settled_debtor %>
+				<td><%= link_to('Esperando OK', '#', class: 'btn btn-default btn-mini disabled') %></td>
+			<% else %>
+				<td>
+					<% if transaction.payment_requested %>
+						<%= link_to('Pago Solicitado', '#', class: 'btn btn-default btn-mini disabled') %> 
+					<% else %>
+						<%= link_to('Pedir Pago', transaction_path(transaction), class: 'btn btn-default btn-mini') %> 
+					<% end %>
+				<%= link_to('Marcar Pagada', transaction_path(transaction), class: 'btn btn-default btn-mini') %>
+				</td>
+			<% end %>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
+</div>
+<% if current_user.loans_waiting_for_settlement.size > 0 %>
+<hr>
+<h2>Préstamos que te pagaron y están esperando que les confirmes</h2>
+<div class=" table-responsive">
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Fecha Creación</th><th>Monto</th><th>Prestador</th><th>Deudor</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% current_user.loans_waiting_for_settlement.each do |transaction| %>	
+		<tr>
+			<td><%= transaction.created_at.localtime.strftime('%d/%m/%Y %H:%M:%S') %></td>
+			<td><%= number_to_currency transaction.amount, precision: 0 %> <%= transaction.currency.symbol unless transaction.currency.nil? %></td>
+			<td><%= transaction.lender.email unless transaction.lender.nil? %></td>
+			<td><%= transaction.debtor.email unless transaction.debtor.nil? %></td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
+</div>
+<% end %>
+<% if current_user.debts_waiting_for_settlement.size > 0 %>
+<hr>
+<h2>Deudas que marcaste como pagadas estás esperando confirmación de recepción</h2>
+<div class=" table-responsive">
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Fecha Creación</th><th>Monto</th><th>Prestador</th><th>Deudor</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% current_user.debts_waiting_for_settlement.each do |transaction| %>	
+		<tr>
+			<td><%= transaction.created_at.localtime.strftime('%d/%m/%Y %H:%M:%S') %></td>
+			<td><%= number_to_currency transaction.amount, precision: 0 %> <%= transaction.currency.symbol unless transaction.currency.nil? %></td>
+			<td><%= transaction.lender.email unless transaction.lender.nil? %></td>
+			<td><%= transaction.debtor.email unless transaction.debtor.nil? %></td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
+</div>
+<% end %>
+<% if current_user.loans_with_payment_requested.size > 0 %>
+<hr>
+<h2>Prestamos que pediste que te paguen y aún no lo han hecho</h2>
+<div class=" table-responsive">
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Fecha Creación</th><th>Monto</th><th>Prestador</th><th>Deudor</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% current_user.loans_with_payment_requested.each do |transaction| %>	
+		<tr>
+			<td><%= transaction.created_at.localtime.strftime('%d/%m/%Y %H:%M:%S') %></td>
+			<td><%= number_to_currency transaction.amount, precision: 0 %> <%= transaction.currency.symbol unless transaction.currency.nil? %></td>
+			<td><%= transaction.lender.email unless transaction.lender.nil? %></td>
+			<td><%= transaction.debtor.email unless transaction.debtor.nil? %></td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
+</div>
+<% end %>
+<hr>
+<div class="row">
+	<div class="span2"><%= link_to 'Pagar Deuda Consolidada', '#', class: 'btn btn-default' %></div>
+	<div class="span2"><%= link_to 'Pedir Pago Consolidado', '#', class: 'btn btn-default' %></div>
+</div>

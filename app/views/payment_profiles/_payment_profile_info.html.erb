@@ -1,0 +1,12 @@
+<dl class="dl-horizontal">
+  <dt><strong><%= t 'bank_name' %>:</strong></dt>
+  <dd><%= payment_profile.bank_name %></dd>
+  <dt><strong><%= t 'account_number' %>:</strong></dt>
+  <dd><%= payment_profile.account_number %></dd>
+  <dt><strong><%= t 'account_type' %>:</strong></dt>
+  <dd><%= payment_profile.account_type %></dd>
+  <dt><strong><%= t 'rut' %>:</strong></dt>
+  <dd><%= payment_profile.rut %></dd>
+  <dt><strong><%= t 'user' %>:</strong></dt>
+  <dd><%= payment_profile.user.email unless payment_profile.user.nil?  %></dd>
+</dl>

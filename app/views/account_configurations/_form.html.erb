@@ -1,0 +1,23 @@
+<%= form_for @account_configuration, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.hidden_field :user_id, :value => current_user.id %>
+  <div class="control-group">
+    <%= f.label :allow_netting, t('allow_netting'), :class => 'control-label' %>
+    <div class="controls">
+		<%= f.check_box :allow_netting, :class => 'text_field' %>
+	</div>
+  </div>
+  <div class="control-group">
+    <%= f.label :collection_mail_frecuency_in_days, t('collection_frecuency'), :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :collection_mail_frecuency_in_days, :class => 'text_field', :style => 'width:10px' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit 'Guardar', :class => 'btn btn-primary' %>
+	<% if current_user.is_admin? %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                account_configurations_path, :class => 'btn' %>
+	<% end %>
+  </div>
+<% end %>

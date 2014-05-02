@@ -1,0 +1,9 @@
+<%- model_class = PaymentProfile -%>
+<div class="page-header">
+  <h1><%=t 'payment_profile' %></h1>
+  <p style="font-weight:light">
+	Antes de usar el sistema debes ingresar los datos a los cuales tus deudores te pagarán ya que se los enviaremos automáticamente a todas las personas que tengan una deuda contigo.</p>
+  <p style="font-weight:light">
+	Solo compartiremos esta información con las personas que te deban dinero para que <b>nunca dejes un peso sobre la mesa</b>.</p>
+</div>
+<%= render :partial => 'form' %>

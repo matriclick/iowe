@@ -1,0 +1,47 @@
+<%= form_for @transaction, :html => { :class => 'form-horizontal' } do |f| %>
+  <% if @transaction.errors.any? %>
+ 	<div id="error_explanation">
+        <h2><%= pluralize(@transaction.errors.count, "error") %> no permitieron guardar la información:</h2>
+        <ul>
+          <% @transaction.errors.full_messages.each do |msg| %>
+            <li><b><%= msg %></b></li>
+          <% end %>
+        </ul>
+     </div>
+  <% end %>
+
+  <%= f.hidden_field :debtor_id, :class => 'text_field', :value => current_user.id %>
+  <div class="control-group">
+    <%= label_tag :lender_email, 'Correo del prestador', :class => 'control-label' %>
+    <div class="controls">
+      <%= text_field_tag :lender_email, nil, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :amount, 'Monto que te prestó', :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :amount, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :currency_id, 'Moneda que usó', :class => 'control-label' %>
+    <div class="controls">
+      <%= f.collection_select(:currency_id, Currency.all, :id, :symbol) %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :comments, 'Agrega un comentario para que no se te olvide por qué te prestaron ', :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :comments, :rows => "5", :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit 'Crear', :class => 'btn btn-primary' %>
+  	<%= link_to t('back_home'), user_root_path, :class => 'btn' %>
+	<% if current_user.is_admin? %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                transactions_path, :class => 'btn' %>
+	<% end %>
+  </div>
+<% end %>

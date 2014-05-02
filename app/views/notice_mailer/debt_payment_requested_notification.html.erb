@@ -1,0 +1,32 @@
+<% content_for :content do %>
+	<table width="95%" cellpadding="10">
+		<tr>
+			<td align="left">
+				<font face="Lucida Grande, Segoe UI, Arial, Verdana, Lucida Sans Unicode, Tahoma, Sans Serif">
+					Hola!<br/><br/>
+					Te están pidiendo que pagues tu deuda<br/>
+					<h3>Detalle de la deuda</h3>
+					<dl class="dl-horizontal">
+					  <dt><strong><%= t 'created_at' %>:</strong></dt>
+					  <dd><%=l @transaction.created_at %></dd>
+					  <dt><strong><%= t 'debtor' %>:</strong></dt>
+					  <dd><%= @transaction.debtor.email %></dd>
+					  <dt><strong><%= t 'lender' %>:</strong></dt>
+					  <dd><%= @transaction.lender.email %></dd>
+					  <dt><strong><%= t 'amount' %>:</strong></dt>
+					  <dd><%= number_to_currency @transaction.amount, precision: 0 %> <%= @transaction.currency.symbol unless @transaction.currency.nil? %></dd>
+					  <dt><strong><%= t 'comments' %>:</strong></dt>
+					  <dd><%= @transaction.comments %></dd>
+					</dl>
+					<h3>Datos para generar el pago</h3>
+					<%= render 'payment_profiles/payment_profile_info', :payment_profile => @transaction.lender.payment_profile %>
+					<div style="text-align:center; margin-top:30px">
+						Una vez realices el pago <%= link_to 'haz click acá para confirmarlo', transaction_mark_as_paid_by_debtor_url(@transaction, token: @transaction.token) %>
+					</div>
+				</font>
+			</td>
+		</tr>
+	</table>
+<% end %>
+
+<%= render "layouts/email_template" %>

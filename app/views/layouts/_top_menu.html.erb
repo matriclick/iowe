@@ -1,0 +1,35 @@
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+	  <%= link_to 'Iowe', user_root_path, class: 'brand' %>
+	  <ul class="nav navbar-nav navbar-right pull-right">
+	  <% if user_signed_in? %>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="true">Tu Cuenta <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+
+			<% unless current_user.payment_profile.nil? %>
+				<li><%= link_to 'Perfil de Pago', payment_profile_path(id: current_user.payment_profile.id) %></li>
+			<% else %>
+				<li><%= link_to 'Perfil de Pago', new_payment_profile_path %></li>
+			<% end %>
+
+			<% unless current_user.account_configuration.nil? %>
+				<li><%= link_to 'Configuración de Cuenta', account_configuration_path(id: current_user.account_configuration.id) %></li>
+			<% else %>
+				<li><%= link_to 'Configuración de Cuenta', new_account_configuration_path %></li>
+			<% end %>
+				<li><%= link_to 'Historial de Deudas y Préstamos', transactions_path %></li>
+				<li><%= link_to 'Cambiar clave', edit_user_registration_path %></li>
+			<li role="presentation" class="divider"></li>
+			<li><%= link_to 'Salir de '+current_user.email, destroy_user_session_path, method: :delete, :rel => 'nofollow' %></li>
+          </ul>
+        </li>
+	  <% else %>
+		<li><%= link_to 'Entrar', new_session_path(resource_name) %></li>
+		<li><%= link_to 'Registrase', new_user_registration_path %></li>
+	  <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
