@@ -87,6 +87,6 @@ Iowe::Application.configure do
     :enable_starttls_auto => true
   }
   
-  config.action_mailer.default_url_options = { :host => "www.tramanta.com" }
-  config.action_mailer.asset_host = "http://www.tramanta.com"
+  config.action_mailer.default_url_options = { :host => "ec2-184-72-160-37.compute-1.amazonaws.com" }
+  config.action_mailer.asset_host = "ec2-184-72-160-37.compute-1.amazonaws.com"
 end

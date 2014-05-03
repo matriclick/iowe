@@ -30,11 +30,10 @@ production:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: test
+  database: iowe
   pool: 5
   timeout: 5000
   username: root
-  password:
-  socket: /tmp/mysql.sock
+  password: 
   
 
