@@ -78,7 +78,7 @@ class TransactionsController < ApplicationController
     @transaction.update_attribute :settled_debtor, true
     NoticeMailer.debt_paid_notification(@transaction).deliver
     respond_to do |format|
-      format.html { redirect_to user_root_path, notice: 'Se ha enviado un correo al Prestador para que confirme la recepción del pago.' }
+      format.html { redirect_to user_root_path, notice: 'Se ha enviado un correo al Prestador para que confirme la recepción del pago que hiciste.' }
       format.json { head :no_content }
     end
   end
@@ -89,7 +89,7 @@ class TransactionsController < ApplicationController
     @transaction.update_attribute :settled_lender, true
     NoticeMailer.debt_payment_confirmed_notification(@transaction).deliver
     respond_to do |format|
-      format.html { redirect_to user_root_path, notice: 'Se ha enviado un correo al Deudor para confirmar que llegó OK el pago' }
+      format.html { redirect_to new_user_session_path, notice: '¡Pago confirmado, deuda saldada y amistad mantenida!' }
       format.json { head :no_content }
     end
   end

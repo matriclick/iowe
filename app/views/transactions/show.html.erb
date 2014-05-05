@@ -17,8 +17,13 @@
 </dl>
 <hr>
 <h3>Datos de pago</h2>
-<%= render 'payment_profiles/payment_profile_info', :payment_profile => @transaction.lender.payment_profile %>
-
+<div class="well">
+	<% unless @transaction.lender.payment_profile.blank? %>
+		<%= render 'payment_profiles/payment_profile_info', :payment_profile => @transaction.lender.payment_profile %>
+	<% else %>
+		El usuario aún no ha agregado sus datos de pago
+	<% end %>
+</div>
 <div class="form-actions">
   	<%= link_to t('back_home'), user_root_path, :class => 'btn' %>
   <% if current_user.is_admin? %>

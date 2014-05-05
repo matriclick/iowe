@@ -7,7 +7,7 @@
 					Te han pagado la siguiente deuda:<br/>
 					<dl class="dl-horizontal">
 					  <dt><strong><%= t 'created_at' %>:</strong></dt>
-					  <dd><%=l @transaction.created_at %></dd>
+					  <dd><%=l @transaction.created_at.in_time_zone(@time_zone) %></dd>
 					  <dt><strong><%= t 'debtor' %>:</strong></dt>
 					  <dd><%= @transaction.debtor.email %></dd>
 					  <dt><strong><%= t 'lender' %>:</strong></dt>
@@ -18,7 +18,8 @@
 					  <dd><%= @transaction.comments %></dd>
 					</dl>
 					<div style="text-align:center; margin-top:30px">
-					Verifica que hayas recibido el pago y luego <%= link_to 'haz click acá para confirmarlo', transaction_mark_as_paid_by_debtor_url(@transaction, token: @transaction.token) %>
+					Verifica que hayas recibido el pago y luego <%= link_to 'haz click acá para confirmarlo', 
+					transaction_mark_as_paid_by_lender_url(@transaction, token: @transaction.token) %>
 					</div>
 				</font>
 			</td>
