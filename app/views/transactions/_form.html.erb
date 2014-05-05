@@ -10,15 +10,39 @@
      </div>
   <% end %>
 
-  <%= f.hidden_field :debtor_id, :class => 'text_field', :value => current_user.id %>
+  <% if @type == 'deuda' %>
+	  <%= f.hidden_field :debtor_id, :class => 'text_field', :value => current_user.id %>
+	  <div class="control-group">
+	    <%= label_tag :lender_email, 'Correo del prestador', :class => 'control-label' %>
+	    <div class="controls">
+	      <%= text_field_tag :lender_email, nil, :class => 'text_field' %>
+	    </div>
+	  </div>
+  <% elsif @type == 'préstamo' %>
+	  <%= f.hidden_field :lender_id, :class => 'text_field', :value => current_user.id %>
+	  <div class="control-group">
+	    <%= label_tag :debtor_email, 'Correo del deudor', :class => 'control-label' %>
+	    <div class="controls">
+	      <%= text_field_tag :debtor_email, nil, :class => 'text_field' %>
+	    </div>
+	  </div>
+  <% else %>
+	  <div class="control-group">
+	    <%= label_tag :lender_email, 'Correo del prestador', :class => 'control-label' %>
+	    <div class="controls">
+	      <%= text_field_tag :lender_email, nil, :class => 'text_field' %>
+	    </div>
+	  </div>
+	  <div class="control-group">
+	    <%= label_tag :debtor_email, 'Correo del deudor', :class => 'control-label' %>
+	    <div class="controls">
+	      <%= text_field_tag :debtor_email, nil, :class => 'text_field' %>
+	    </div>
+	  </div>
+  <% end %>
+
   <div class="control-group">
-    <%= label_tag :lender_email, 'Correo del prestador', :class => 'control-label' %>
-    <div class="controls">
-      <%= text_field_tag :lender_email, nil, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :amount, 'Monto que te prestó', :class => 'control-label' %>
+    <%= f.label :amount, 'Monto', :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :amount, :class => 'text_field' %>
     </div>
@@ -30,7 +54,7 @@
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :comments, 'Agrega un comentario para que no se te olvide por qué te prestaron ', :class => 'control-label' %>
+    <%= f.label :comments, 'Agrega un comentario para que no se te olvide de qué se trata esta transacción ', :class => 'control-label' %>
     <div class="controls">
       <%= f.text_area :comments, :rows => "5", :class => 'text_field' %>
     </div>

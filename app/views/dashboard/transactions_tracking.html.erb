@@ -1,0 +1,12 @@
+<h1>Deuda consolidada</h1>
+<p>Acá puedes ver cómo deben las personas que tu les debes para que no se generen transferencias de dinero innecesarias</p>
+<div class="tree well">
+	<% if current_user.get_active_debts.size > 0 %>
+	<ul>
+		<li><%= User.show_consolidated_debt_tree(current_user, '', current_user, true) %></li>
+	</ul>
+	<% else %>
+	No hay deudas activas
+	<% end %>
+</div>
+<%= link_to t('back_home'), user_root_path, :class => 'btn' %>

@@ -1,5 +1,6 @@
 <h1>Dashboard</h1>
-<%= link_to 'Agregar Deuda', new_transaction_path, class: 'btn btn-danger' %>
+<%= link_to 'Agregar Deuda', new_transaction_path(type: 'deuda'), class: 'btn btn-danger' %> 
+<%= link_to 'Agregar Préstamo', new_transaction_path(type: 'préstamo'), class: 'btn btn-primary' %>
 <div class="row" style="margin-top:20px">
 	<div class="span12">
 		Te deben: <%= number_to_currency current_user.get_active_loans.sum(:amount), precision: 0 %> | 
@@ -23,7 +24,7 @@
 		<tr <%= is_debt ? 'style=background-color:#FFEEEE' : 'style=background-color:#EEFFF2' %>>
 			<% net_transactions = is_debt ? net_transactions - transaction.amount : net_transactions + transaction.amount %>
 			<td><%= number_to_currency net_transactions, precision: 0 %></td>
-			<td><%= transaction.created_at.localtime.localtime.strftime('%d/%m/%Y %H:%M:%S') %></td>
+			<td><%= transaction.created_at.in_time_zone(@time_zone).strftime('%d/%m/%Y %H:%M:%S') %></td>
 			<td><%= number_to_currency transaction.amount, precision: 0 %> <%= transaction.currency.symbol unless transaction.currency.nil? %></td>
 			<td><%= transaction.lender.email unless transaction.lender.nil? %></td>
 			<td><%= transaction.debtor.email unless transaction.debtor.nil? %></td>
@@ -59,7 +60,7 @@
 	<tbody>
 		<% current_user.loans_waiting_for_settlement.each do |transaction| %>	
 		<tr>
-			<td><%= transaction.created_at.localtime.strftime('%d/%m/%Y %H:%M:%S') %></td>
+			<td><%= transaction.created_at.strftime('%d/%m/%Y %H:%M:%S') %></td>
 			<td><%= number_to_currency transaction.amount, precision: 0 %> <%= transaction.currency.symbol unless transaction.currency.nil? %></td>
 			<td><%= transaction.lender.email unless transaction.lender.nil? %></td>
 			<td><%= transaction.debtor.email unless transaction.debtor.nil? %></td>
@@ -82,7 +83,7 @@
 	<tbody>
 		<% current_user.debts_waiting_for_settlement.each do |transaction| %>	
 		<tr>
-			<td><%= transaction.created_at.localtime.strftime('%d/%m/%Y %H:%M:%S') %></td>
+			<td><%= transaction.created_at.strftime('%d/%m/%Y %H:%M:%S') %></td>
 			<td><%= number_to_currency transaction.amount, precision: 0 %> <%= transaction.currency.symbol unless transaction.currency.nil? %></td>
 			<td><%= transaction.lender.email unless transaction.lender.nil? %></td>
 			<td><%= transaction.debtor.email unless transaction.debtor.nil? %></td>
@@ -105,7 +106,7 @@
 	<tbody>
 		<% current_user.loans_with_payment_requested.each do |transaction| %>	
 		<tr>
-			<td><%= transaction.created_at.localtime.strftime('%d/%m/%Y %H:%M:%S') %></td>
+			<td><%= transaction.created_at.strftime('%d/%m/%Y %H:%M:%S') %></td>
 			<td><%= number_to_currency transaction.amount, precision: 0 %> <%= transaction.currency.symbol unless transaction.currency.nil? %></td>
 			<td><%= transaction.lender.email unless transaction.lender.nil? %></td>
 			<td><%= transaction.debtor.email unless transaction.debtor.nil? %></td>
@@ -117,6 +118,5 @@
 <% end %>
 <hr>
 <div class="row">
-	<div class="span2"><%= link_to 'Pagar Deuda Consolidada', '#', class: 'btn btn-default' %></div>
-	<div class="span2"><%= link_to 'Pedir Pago Consolidado', '#', class: 'btn btn-default' %></div>
+	<div class="span2"><%= link_to 'Deuda Consolidada', dashboard_transactions_tracking_path, class: 'btn btn-default' %></div>
 </div>

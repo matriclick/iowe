@@ -16,6 +16,7 @@ class TransactionsController < ApplicationController
 
   # GET /transactions/new
   def new
+    @type = params[:type]
     @transaction = Transaction.new
   end
 
@@ -26,21 +27,24 @@ class TransactionsController < ApplicationController
   # POST /transactions
   # POST /transactions.json
   def create
-    lender_email = params[:lender_email]
-    lender = User.find_by_email lender_email
-    send_invite_mail = false
-    unless lender_email.blank?
-      if lender.blank?
-        send_invite_mail = true
-        lender = User.create!({:email => lender_email, :password => "111111", :password_confirmation => "111111" })
-      end
-      params[:transaction][:lender_id] = lender.id 
+    send_invite_mail_to_debtor = false
+    send_invite_mail_to_lender = false
+    
+    if !params[:lender_email].blank?
+      add_lender_to_params
+    elsif !params[:debtor_email].blank?
+      add_debtor_to_params
+    else
+      add_lender_to_params
+      add_debtor_to_params
     end
+    
     @transaction = Transaction.new(transaction_params)
 
     respond_to do |format|
       if @transaction.save
-        NoticeMailer.send_invite_mail(@transaction).deliver if send_invite_mail
+        NoticeMailer.send_invite_mail_to_lender(@transaction).deliver if send_invite_mail_to_lender
+        NoticeMailer.send_invite_mail_to_debtor(@transaction).deliver if send_invite_mail_to_debtor
         format.html { redirect_to user_root_path, notice: '¡Deuda creada correctamente!' }
         format.json { render action: 'show', status: :created, location: @transaction }
       else
@@ -59,7 +63,7 @@ class TransactionsController < ApplicationController
     
     respond_to do |format|
       if @transaction.update(transaction_params)
-        format.html { redirect_to @transaction, notice: '¡Deuda actualizada correctamente!' }
+        format.html { redirect_to @transaction, notice: '¡Transacción actualizada correctamente!' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -133,6 +137,31 @@ class TransactionsController < ApplicationController
             false
           end
         end
+      end
+    end
+    
+    def add_lender_to_params
+      lender_email = params[:lender_email]
+      lender = User.find_by_email lender_email  
+      unless lender_email.blank?
+        if lender.blank?
+          send_invite_mail_to_lender = true
+          lender = User.create!({:email => lender_email, :password => "111111", :password_confirmation => "111111" })
+        end
+        params[:transaction][:lender_id] = lender.id 
+      end
+      
+    end
+    
+    def add_debtor_to_params
+      debtor_email = params[:debtor_email]
+      debtor = User.find_by_email debtor_email
+      unless debtor_email.blank?
+        if debtor.blank?
+          send_invite_mail_to_debtor = true
+          debtor = User.create!({:email => debtor_email, :password => "111111", :password_confirmation => "111111" })
+        end
+        params[:transaction][:debtor_id] = debtor.id 
       end
     end
     

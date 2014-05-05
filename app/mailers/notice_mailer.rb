@@ -1,8 +1,13 @@
 # coding: utf-8
 class NoticeMailer < ActionMailer::Base
-	default from: "mensajes@tramanta.com"
+	default from: "hhanckes@gmail.com"
   
-  def send_invite_mail(transaction)
+  def send_invite_mail_to_lender(transaction)
+    @transaction = transaction
+  	mail to: transaction.lender.email, bcc: "hhanckes@gmail.com", subject: "¡Prestaste dinero y lo tenemos registrado!"
+  end
+
+  def send_invite_mail_to_debtor(transaction)
     @transaction = transaction
   	mail to: transaction.lender.email, bcc: "hhanckes@gmail.com", subject: "¡Prestaste dinero y lo tenemos registrado!"
   end

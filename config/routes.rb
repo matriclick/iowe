@@ -6,6 +6,9 @@ Iowe::Application.routes.draw do
   resources :currencies
 
   get "dashboard/view" => 'dashboard#view', as: :user_root
+  get "dashboard/transactions_tracking" => 'dashboard#transactions_tracking', as: :dashboard_transactions_tracking
+  post "dashboard/set_time_zone" => 'dashboard#set_time_zone', as: :set_time_zone_path
+  
   resources :transactions
   get 'transaction/:id/mark_as_paid_by_debtor' => 'transactions#mark_as_paid_by_debtor', as: :transaction_mark_as_paid_by_debtor
   get 'transaction/:id/mark_as_paid_by_lender' => 'transactions#mark_as_paid_by_lender', as: :transaction_mark_as_paid_by_lender
