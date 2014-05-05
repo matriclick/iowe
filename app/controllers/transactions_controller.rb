@@ -31,12 +31,12 @@ class TransactionsController < ApplicationController
     send_invite_mail_to_lender = false
     
     if !params[:lender_email].blank?
-      add_lender_to_params
+      send_invite_mail_to_lender = add_lender_to_params
     elsif !params[:debtor_email].blank?
-      add_debtor_to_params
+      send_invite_mail_to_debtor = add_debtor_to_params
     else
-      add_lender_to_params
-      add_debtor_to_params
+      send_invite_mail_to_lender = add_lender_to_params
+      send_invite_mail_to_debtor = add_debtor_to_params
     end
     
     @transaction = Transaction.new(transaction_params)
@@ -143,26 +143,31 @@ class TransactionsController < ApplicationController
     def add_lender_to_params
       lender_email = params[:lender_email]
       lender = User.find_by_email lender_email  
+      is_new = false
       unless lender_email.blank?
         if lender.blank?
           send_invite_mail_to_lender = true
           lender = User.create!({:email => lender_email, :password => "111111", :password_confirmation => "111111" })
+          is_new = true
         end
         params[:transaction][:lender_id] = lender.id 
       end
-      
+      return is_new
     end
     
     def add_debtor_to_params
       debtor_email = params[:debtor_email]
       debtor = User.find_by_email debtor_email
+      is_new = false
       unless debtor_email.blank?
         if debtor.blank?
           send_invite_mail_to_debtor = true
           debtor = User.create!({:email => debtor_email, :password => "111111", :password_confirmation => "111111" })
+          is_new = true
         end
         params[:transaction][:debtor_id] = debtor.id 
       end
+      return is_new
     end
     
 end
