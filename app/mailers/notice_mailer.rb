@@ -24,7 +24,7 @@ class NoticeMailer < ActionMailer::Base
   
   def debt_payment_requested_notification(transaction)
     @transaction = transaction
-    mail to: transaction.debtor, subject: "¡Llegó el momento de pagar tu deuda!"
+    mail to: transaction.debtor.email, subject: "¡Llegó el momento de pagar tu deuda!"
   end
   
 end
