@@ -6,7 +6,7 @@
 		<li><%= User.show_consolidated_debt_tree(current_user, '', current_user, true) %></li>
 	</ul>
 	<% else %>
-	No hay deudas activas
+		No hay deudas activas
 	<% end %>
 </div>
 <%= link_to t('back_home'), user_root_path, :class => 'btn' %>

@@ -14,13 +14,13 @@ class User < ActiveRecord::Base
   def self.show_consolidated_debt_tree(root, html, parent, first_time, debt = 0)
     html << ''
     if root.get_who_i_owe.size == 0 or (root == parent and !first_time)
-      html << "<li><span><i class='icon-leaf'></i> #{root.email} <br>#{text(debt)} #{number_to_currency(debt.abs, precision: 0) if debt != 0} al padre</span> <a href="">Goes somewhere</a>"
+      html << "<li><span><i class='icon-leaf'></i> #{root.email} <br>#{text(debt)} #{number_to_currency(debt.abs, precision: 0)+' al padre' if debt != 0}</span> <a href="">Pagar esta rama</a>"
       return html.html_safe
     else
       if first_time
-        html << "<span><i class='icon-folder-open'></i> #{root.email}</span> <a href="">Goes somewhere</a>"
+        html << "<span><i class='icon-folder-open'></i> #{root.email}</span>"
       else
-        html << "<li><span><i class='icon-minus-sign'></i> #{root.email} <br>#{text(debt)} #{number_to_currency(debt.abs, precision: 0) if debt != 0} al padre</span> <a href="">Goes somewhere</a>"
+        html << "<li><span><i class='icon-minus-sign'></i> #{root.email} <br>#{text(debt)} #{number_to_currency(debt.abs, precision: 0)+' al padre' if debt != 0}</span>"
       end
       html << "<ul>"
       for template_child in root.get_who_i_owe 
